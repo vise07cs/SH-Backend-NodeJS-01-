@@ -49,6 +49,14 @@ else if(req.url=="/message"){
   })
 
 }
+
+else if(req.url=="/read"){
+  fs.readFile("formValues.txt",(err,data)=>{
+    console.log("my data value is "+data.toString());
+    res.end(`<h1>${data.toString()}</h1>`);
+  })
+}
+
     
      
 })
