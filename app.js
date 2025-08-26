@@ -2,28 +2,31 @@ const http=require("http");
 const fs=require("fs");
 let server=http.createServer((req,res)=>{
 
-// let url=req.url;
+    if (req.url === "/" && req.method === "GET") {
+    // Read the file before rendering the form
+    fs.readFile("data.txt", (err, data) => {
+      let fileContent = "";
+      if (!err && data.length > 0) {
+        fileContent = data.toString();
+      }
 
-// let method=req.method;
+      res.setHeader("Content-Type", "text/html");
+      res.end(`
+        <form action="/message" method="POST">
+          <label>Username</label>
+          <input type="text" name="username"/>
+          <button type="submit">Submit</button>
+        </form>
+        <h2>Last submitted value in file : ${fileContent ? fileContent : "No data yet"}</h2>
+      `);
+    });
+  }
 
 
-if(req.url=="/"){
-
-  res.setHeader("Content-Type","text/html");
-
-  res.end(`
-    <form action="/message" method="POST">
-     <label>Username</label>
-      <input type="text" name="username"/>
-    
-      <button type="submit">Submit</button>
-
-    </form>`
-  )
-}
 
 
-else if(req.url=="/message"){
+
+else if(req.url=="/message" && req.method==="POST"){
   res.setHeader("Content-Type","text/html");
     let body=[];
 
@@ -41,7 +44,7 @@ else if(req.url=="/message"){
     let formVal=combinedBuffer.toString().split("=")[1];
     console.log(formVal);
  
-    fs.writeFile("formValues.txt",formVal,(err)=>{
+    fs.writeFile("data.txt",formVal,(err)=>{
       res.statusCode=302;
       res.setHeader("Location","/");
       return res.end();
@@ -50,12 +53,6 @@ else if(req.url=="/message"){
 
 }
 
-else if(req.url=="/read"){
-  fs.readFile("formValues.txt",(err,data)=>{
-    console.log("my data value is "+data.toString());
-    res.end(`<h1>${data.toString()}</h1>`);
-  })
-}
 
     
      
