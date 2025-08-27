@@ -1,14 +1,30 @@
-const http=require("http");
-const routes=require("./routes");
+const express=require("express");
 
-let server=http.createServer(routes.requestHandler);
-
-
-routes.f1();
-
-let port=3007;
+const app=express();
 
 
-server.listen(port,()=>{
-  console.log("Server started on port 3007");
+app.get("/orders",(req,res)=>{
+  res.send("<h1>Here is the list of all orders. </h1>")
+})
+
+
+app.post("/orders",(req,res)=>{
+  res.send("<h1>A new order has been created </h1>")
+})
+
+
+app.get("/users",(req,res)=>{
+  res.send("<h1> Here is the list of all users. </h1>")
+})
+
+
+app.post("/user",(req,res)=>{
+res.send("<h1>A new user has been added.</h1>")
+})
+
+
+app.listen(3000,()=>{
+    console.log("Server is up and running on port 3000.");
 });
+
+
